@@ -2,12 +2,12 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from './styles/global';
 import { Theme } from './styles/theme';
-import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 const App: React.FC = () => (
   <>
     <ThemeProvider theme={Theme}>
-      <SignIn />
+      <SignUp />
       <GlobalStyle />
     </ThemeProvider>
   </>
