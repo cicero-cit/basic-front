@@ -1,15 +1,35 @@
 import React from 'react';
-import { Container } from './styles';
+import { Container, Actions } from './styles';
+import { AvatarInterface } from './props';
+import { Emoticons } from '../../utils/emoticons';
 
-const Avatar: React.FC = () => {
+const Avatar: React.FC<AvatarInterface> = ({
+  id,
+  name,
+  nickname,
+  deleteContact,
+  editContact,
+}) => {
   return (
     <Container>
-      <span role="img" aria-label="name">
-        😀
-      </span>
+      {Emoticons[Math.floor(Math.random() * 10)]}
 
-      <strong>Roberto Nobre</strong>
-      <p>(19) 982047718</p>
+      <p>{name}</p>
+      <p>{nickname}</p>
+
+      <Actions>
+        <button type="button" onClick={() => editContact(id)}>
+          <span role="img" aria-label="pencil">
+            ✏️
+          </span>
+        </button>
+
+        <button type="button" onClick={() => deleteContact(id)}>
+          <span role="img" aria-label="pencil">
+            🗑️
+          </span>
+        </button>
+      </Actions>
     </Container>
   );
 };

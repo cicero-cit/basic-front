@@ -10,6 +10,7 @@
     "@types/yup": "^0.28.0",
     "@unform/core": "^2.1.0",
     "@unform/web": "^2.1.0",
+    "axios": "^0.19.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "fake-indexeddb": "^3.0.0",
@@ -22,6 +23,7 @@
     "styled-components": "^5.1.0",
     "ts-jest": "^25.2.0",
     "typescript": "~3.7.2",
+    "uuidv4": "^6.0.8",
     "yup": "^0.28.5"
   },
   "scripts": {
