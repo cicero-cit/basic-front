@@ -1,12 +1,21 @@
-import React, { ButtonHTMLAttributes } from 'react';
+import React from 'react';
 import { Container } from './styles';
+import { ButtonInterface } from './props';
+import { setTestId } from '../../utils/getTestId';
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+const Button: React.FC<ButtonInterface> = ({
+  children,
+  testId,
+  index = null,
+  ...rest
+}) => {
+  const getTestIdData = { testId, index, name: 'button' };
 
-const Button: React.FC<ButtonProps> = ({ children, ...rest }) => (
-  <Container type="button" {...rest}>
-    {children}
-  </Container>
-);
+  return (
+    <Container type="button" data-testid={setTestId(getTestIdData)} {...rest}>
+      {children}
+    </Container>
+  );
+};
 
 export default Button;

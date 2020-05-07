@@ -1,0 +1,23 @@
+{
+  "collectCoverage": true,
+  "coverageDirectory": "coverage",
+  "coverageThreshold": {
+    "global": {
+      "branches": 50,
+      "functions": 50,
+      "lines": 50,
+      "statements": 50
+    }
+  },
+  "errorOnDeprecated": true,
+  "moduleFileExtensions": ["ts", "tsx", "js"],
+  "testPathIgnorePatterns": ["/node_modules/", "dist/"],
+  "testRegex": "test.*\\.tsx?$",
+  "testTimeout": 10000,
+  "transform": {
+    "\\.(tsx?)": "ts-jest"
+  },
+  "setupFiles": ["fake-indexeddb/auto"],
+  "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
+  "verbose": true
+}

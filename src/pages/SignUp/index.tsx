@@ -10,6 +10,8 @@ import Input from '../../components/Input';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 const SignUp: React.FC = () => {
+  const pageTestId = 'signup';
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
@@ -53,7 +55,9 @@ const SignUp: React.FC = () => {
             type="password"
             placeholder="Senha"
           />
-          <Button type="submit">Cadastrar</Button>
+          <Button testId={pageTestId} type="submit">
+            Cadastrar
+          </Button>
         </Form>
 
         <Link to="/signin">

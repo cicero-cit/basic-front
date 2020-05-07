@@ -3,9 +3,26 @@ import { shade } from 'polished';
 import { Theme } from '../../styles/theme';
 
 export const Container = styled.div`
-  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 30px;
+
   display: flex;
-  align-items: stretch;
+  flex-direction: row;
+  align-items: flex-start;
+
+  @media (max-width: 1000px) {
+    flex-direction: column;
+
+    #app main {
+      margin-left: 0;
+      margin-top: 30px;
+    }
+
+    #app aside {
+      width: 100%;
+    }
+  }
 `;
 
 const appearFromBottom = keyframes`
@@ -25,7 +42,6 @@ export const Content = styled.div`
   align-items: center;
   place-content: center;
   text-align: center;
-  width: 100%;
 
   animation: ${appearFromBottom} 1s;
 
@@ -48,6 +64,10 @@ export const Content = styled.div`
     display: flex;
     align-items: center;
 
+    position: absolute;
+    top: 0;
+    right: 15px;
+
     &:hover {
       color: ${shade(0.2, Theme.black)};
     }
@@ -55,5 +75,20 @@ export const Content = styled.div`
     svg {
       margin-right: 16px;
     }
+  }
+
+  @media (max-width: 1000px) {
+    width: 100%;
+  }
+`;
+
+export const ListContainer = styled.div`
+  margin-left: 30px;
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (max-width: 1000px) {
+    margin-left: 0;
+    margin-top: 30px;
   }
 `;

@@ -10,6 +10,8 @@ import Button from '../../components/Button';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 const SignIn: React.FC = () => {
+  const pageTestId = 'signin';
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
@@ -52,7 +54,9 @@ const SignIn: React.FC = () => {
             placeholder="Senha"
           />
 
-          <Button type="submit">Entrar</Button>
+          <Button testId={pageTestId} type="submit">
+            Entrar
+          </Button>
 
           <Link to="/signin">Esqueci minha senha</Link>
         </Form>
