@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
 import { Theme } from '../../styles/theme';
 
@@ -8,6 +8,17 @@ export const Container = styled.div`
   align-items: stretch;
 `;
 
+const appearFromBottom = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -15,6 +26,8 @@ export const Content = styled.div`
   place-content: center;
   text-align: center;
   width: 100%;
+
+  animation: ${appearFromBottom} 1s;
 
   h3 {
     color: ${props => props.theme.black};
