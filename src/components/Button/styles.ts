@@ -14,6 +14,21 @@ export const Container = styled.button`
   margin-top: 16px;
 
   &:hover {
+    &.success {
+      background: ${shade(0.2, Theme.green)};
+    }
+
+    &.error {
+      background: ${shade(0.2, Theme.red)};
+    }
     background: ${shade(0.2, Theme.darkBlue)};
+  }
+
+  &.success {
+    background: ${props => props.theme.green};
+  }
+
+  &.error {
+    background: ${props => props.theme.red};
   }
 `;
