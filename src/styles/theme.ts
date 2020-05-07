@@ -4,6 +4,7 @@ export const Theme = {
   blue: '#40BFBD',
   white: '#FFF',
   purple: '#3D2E8A',
+  red: '#c53030',
 };
 
 export interface ThemeProp {

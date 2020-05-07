@@ -39,7 +39,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isFocused={isFocused} isFilled={isFilled}>
+    <Container isErrored={!!error} isFocused={isFocused} isFilled={isFilled}>
       {Icon && <Icon size={20} />}
       <input
         onFocus={handleInputFocus}
@@ -48,6 +48,8 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
         ref={inputRef}
         {...rest}
       />
+
+      {error && <div className="error">{error}</div>}
     </Container>
   );
 };
