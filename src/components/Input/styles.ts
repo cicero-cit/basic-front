@@ -1,6 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface Container {
+  isFocused: boolean;
+  isFilled: boolean;
+}
+
+export const Container = styled.div<Container>`
   background: ${props => props.theme.lightBlue};
   border-radius: 10px;
   border: 2px solid ${props => props.theme.lightBlue};
@@ -13,6 +18,18 @@ export const Container = styled.div`
   & + div {
     margin-top: 8px;
   }
+  ${props =>
+    props.isFocused &&
+    css`
+      color: ${props.theme.purple};
+      border-color: ${props.theme.purple};
+    `}
+
+  ${props =>
+    props.isFilled &&
+    css`
+      color: ${props.theme.purple};
+    `}
 
   input {
     background-color: transparent;
