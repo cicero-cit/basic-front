@@ -10,6 +10,7 @@ import Input from '../../components/Input';
 import getValidationErrors from '../../utils/getValidationErrors';
 import Avatar from '../../components/Avatar';
 import API from '../../services/api';
+import { useToast } from '../../hooks/toast';
 
 interface Contact {
   id: string;
@@ -23,6 +24,7 @@ const Home: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [contact, setContact] = useState<Contact>({} as Contact);
+  const { addToast } = useToast();
 
   const addContact = useCallback(
     async ({ name, nickname }: Omit<Contact, 'id'>) => {
@@ -33,26 +35,51 @@ const Home: React.FC = () => {
 
       const response = await API.post('contacts', Contact);
       setContacts(oldContacts => [...oldContacts, response.data]);
+      formRef.current?.reset();
+
+      addToast({
+        type: 'success',
+        title: 'Adicionado!',
+        description: 'Contato adicionado com sucesso!',
+      });
     },
-    [],
+    [addToast],
   );
 
-  const updateContact = useCallback(async ({ id, name, nickname }: Contact) => {
-    const Contact = {
-      id,
-      name,
-      nickname,
-    };
+  const updateContact = useCallback(
+    async ({ id, name, nickname }: Contact) => {
+      const Contact = {
+        id,
+        name,
+        nickname,
+      };
 
-    const response = await API.put(`contacts/${Contact.id}`, Contact);
-    setContacts(oldContacts => [...oldContacts, response.data]);
-    formRef.current?.setData({ name: '', nickname: '' });
-  }, []);
+      const response = await API.put(`contacts/${Contact.id}`, Contact);
+      setContacts(oldContacts => [...oldContacts, response.data]);
+      formRef.current?.reset();
 
-  const deleteContact = useCallback(async (id: string) => {
-    await API.delete(`contacts/${id}`);
-    setContacts(oldContacts => oldContacts.filter(item => item.id !== id));
-  }, []);
+      addToast({
+        type: 'info',
+        title: 'Atualizado!',
+        description: 'Contato foi atualizado',
+      });
+    },
+    [addToast],
+  );
+
+  const deleteContact = useCallback(
+    async (id: string) => {
+      await API.delete(`contacts/${id}`);
+      setContacts(oldContacts => oldContacts.filter(item => item.id !== id));
+
+      addToast({
+        type: 'error',
+        title: 'Bye bye!',
+        description: 'Contato foi removido da lista',
+      });
+    },
+    [addToast],
+  );
 
   const clickEditContact = useCallback(
     (id: string) => {
@@ -93,8 +120,12 @@ const Home: React.FC = () => {
           await addContact(data);
         }
       } catch (err) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
+        console.log(err);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
       }
     },
     [addContact, updateContact, contact.id],
@@ -123,6 +154,7 @@ const Home: React.FC = () => {
         {contacts.map((item, idx) => (
           <Avatar
             {...item}
+            key={item.id}
             testId={pageTestId}
             index={idx}
             deleteContact={deleteContact}

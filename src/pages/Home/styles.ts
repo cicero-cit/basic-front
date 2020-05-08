@@ -4,6 +4,7 @@ import { Theme } from '../../styles/theme';
 
 export const Container = styled.div`
   max-width: 1200px;
+  min-width: 320px;
   margin: 0 auto;
   padding: 60px 15px;
 
@@ -84,6 +85,8 @@ export const ListContainer = styled.div`
   flex-wrap: wrap;
   height: 80vh;
   overflow: auto;
+  justify-content: center;
+
   /* width */
   ::-webkit-scrollbar {
     width: 10px;
