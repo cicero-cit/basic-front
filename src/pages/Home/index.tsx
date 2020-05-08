@@ -120,7 +120,6 @@ const Home: React.FC = () => {
           await addContact(data);
         }
       } catch (err) {
-        console.log(err);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
