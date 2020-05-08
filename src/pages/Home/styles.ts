@@ -23,28 +23,6 @@ export const Container = styled.div`
       width: 100%;
     }
   }
-
-  > a {
-    color: ${props => props.theme.black};
-    display: block;
-    margin-top: 24px;
-    text-decoration: none;
-    transition: color 0.2s;
-    display: flex;
-    align-items: center;
-
-    position: absolute;
-    top: 0;
-    right: 15px;
-
-    &:hover {
-      color: ${shade(0.2, Theme.black)};
-    }
-
-    svg {
-      margin-right: 16px;
-    }
-  }
 `;
 
 const appearFromBottom = keyframes`
@@ -79,6 +57,24 @@ export const Content = styled.div`
 
   @media (max-width: 1000px) {
     width: 100%;
+  }
+
+  > a {
+    color: ${props => props.theme.black};
+    display: block;
+    margin-top: 50px;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: ${shade(0.2, Theme.black)};
+    }
+
+    svg {
+      margin-right: 16px;
+    }
   }
 `;
 

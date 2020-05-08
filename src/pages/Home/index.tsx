@@ -103,15 +103,20 @@ const Home: React.FC = () => {
   return (
     <Container>
       <Content>
-        <h3>Qual contatinho vai salvar hoje?</h3>
+        <h3>Quem vai adicionar na sua lista hoje?</h3>
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input name="name" icon={FiUser} placeholder="Nome" />
           <Input name="nickname" icon={FiPhone} placeholder="Nickname" />
 
           <Button testId={pageTestId} type="submit" className="success">
-            Salvar contatinho
+            Adicionar
           </Button>
         </Form>
+
+        <Link to="/signin">
+          <FiArrowLeft />
+          Sair
+        </Link>
       </Content>
 
       <ListContainer>
@@ -125,11 +130,6 @@ const Home: React.FC = () => {
           />
         ))}
       </ListContainer>
-
-      <Link to="/signin">
-        <FiArrowLeft />
-        Sair
-      </Link>
     </Container>
   );
 };
