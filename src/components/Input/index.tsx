@@ -34,7 +34,7 @@ const Input: React.FC<InputInterface> = ({
     });
   }, [fieldName, registerField]);
 
-  const getTestIdData = { testId, index, name: 'button' };
+  const getTestIdData = { testId, index, name: 'input' };
 
   return (
     <Container isErrored={!!error} isFocused={isFocused} isFilled={isFilled}>
@@ -46,6 +46,8 @@ const Input: React.FC<InputInterface> = ({
         ref={inputRef}
         {...rest}
         data-testid={setTestId(getTestIdData)}
+        name={name}
+        aria-label={name}
       />
 
       {error && <div className="error">{error}</div>}
