@@ -1,0 +1,3 @@
+{
+  "jest.pathToJest": "yarn jest --env=jest-environment-jsdom-sixteen"
+}

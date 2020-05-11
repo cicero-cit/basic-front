@@ -1,14 +1,14 @@
 import React from 'react';
 import { useTransition } from 'react-spring';
 import { Container } from './styles';
-import { ToastMessage } from '../../hooks/toast';
 import Toast from './Toast';
+import { ToastContainerInterface } from './props';
+import { setTestId } from '../../utils/getTestId';
 
-interface ToastContainerProps {
-  messages: ToastMessage[];
-}
-
-const ToastContainer: React.FC<ToastContainerProps> = ({ messages }) => {
+const ToastContainer: React.FC<ToastContainerInterface> = ({
+  messages,
+  testId,
+}) => {
   const messagesWithTransition = useTransition(
     messages,
     message => message.id,
@@ -19,10 +19,18 @@ const ToastContainer: React.FC<ToastContainerProps> = ({ messages }) => {
     },
   );
 
+  const testIdToastList = setTestId({ name: 'toastList', testId });
+
   return (
-    <Container>
-      {messagesWithTransition.map(({ item, key, props }) => (
-        <Toast message={item} style={props} key={key} />
+    <Container data-testid={testIdToastList}>
+      {messagesWithTransition.map(({ item, key, props }, index) => (
+        <Toast
+          message={item}
+          style={props}
+          key={key}
+          testId={testIdToastList}
+          index={index}
+        />
       ))}
     </Container>
   );

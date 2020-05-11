@@ -36,7 +36,7 @@ describe('<Input />', () => {
     const { input } = setup();
 
     expect(input.hasAttribute('data-testid')).toBe(true);
-    expect(input.getAttribute('data-testId')).toBe(`${mockTestId}-input`);
+    expect(input.getAttribute('data-testid')).toBe(`${mockTestId}-input`);
   });
 
   test('Simula digitação do input', () => {

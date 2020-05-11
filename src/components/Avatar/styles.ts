@@ -14,22 +14,8 @@ export const Container = styled.div`
   align-items: center;
   flex-direction: column;
 
-  span {
+  .emoji {
     font-size: 50px;
-  }
-
-  button {
-    background: transparent;
-    border: 0;
-    height: 30px;
-
-    & + button {
-      padding-left: 10px;
-    }
-
-    span {
-      font-size: 15px;
-    }
   }
 `;
 

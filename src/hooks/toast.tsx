@@ -14,9 +14,12 @@ export interface ToastMessage {
   description: string;
 }
 
-const ToastContext = createContext<ToastContextData>({} as ToastContextData);
+export const ToastContext = createContext<ToastContextData>(
+  {} as ToastContextData,
+);
 
 export const ToastProvider: React.FC = ({ children }) => {
+  const testIdContext = 'toastContext';
   const [messages, setMessages] = useState<ToastMessage[]>([]);
 
   const addToast = useCallback(
@@ -47,7 +50,7 @@ export const ToastProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-      <ToastContainer messages={messages} />
+      <ToastContainer testId={testIdContext} messages={messages} />
     </ToastContext.Provider>
   );
 };

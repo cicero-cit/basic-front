@@ -1,7 +1,11 @@
 import React from 'react';
+import { FiEdit, FiTrash } from 'react-icons/fi';
 import { Container, Actions } from './styles';
 import { AvatarInterface } from './props';
 import { Emoticons } from '../../utils/emoticons';
+import { setTestId } from '../../utils/getTestId';
+import IconButton from '../IconButton';
+import Label from '../Label';
 
 const Avatar: React.FC<AvatarInterface> = ({
   id,
@@ -10,26 +14,32 @@ const Avatar: React.FC<AvatarInterface> = ({
   emoji,
   deleteContact,
   editContact,
+  testId,
+  ...rest
 }) => {
+  const buildTestId = { testId, name: 'avatar', index: rest.index };
+
   return (
-    <Container>
+    <Container data-testid={setTestId(buildTestId)}>
       {Emoticons[emoji]}
 
-      <p>{name}</p>
-      <p>{nickname}</p>
+      <Label testId={setTestId(buildTestId)}>{name}</Label>
+      <Label testId={setTestId(buildTestId)}>{nickname}</Label>
 
       <Actions>
-        <button type="button" onClick={() => editContact(id)}>
-          <span role="img" aria-label="pencil">
-            ✏️
-          </span>
-        </button>
+        <IconButton
+          onClick={() => editContact(id)}
+          icon={FiEdit}
+          testId={setTestId(buildTestId)}
+          index={0}
+        />
 
-        <button type="button" onClick={() => deleteContact(id)}>
-          <span role="img" aria-label="pencil">
-            🗑️
-          </span>
-        </button>
+        <IconButton
+          onClick={() => deleteContact(id)}
+          icon={FiTrash}
+          testId={setTestId(buildTestId)}
+          index={1}
+        />
       </Actions>
     </Container>
   );

@@ -6,12 +6,9 @@ import {
   FiInfo,
 } from 'react-icons/fi';
 import { Container } from './styles';
-import { ToastMessage, useToast } from '../../../hooks/toast';
-
-interface ToastProps {
-  message: ToastMessage;
-  style: object;
-}
+import { useToast } from '../../../hooks/toast';
+import { ToastInterface } from './props';
+import { setTestId } from '../../../utils/getTestId';
 
 const icons = {
   info: <FiInfo size={24} />,
@@ -19,7 +16,12 @@ const icons = {
   success: <FiCheckCircle size={24} />,
 };
 
-const Toast: React.FC<ToastProps> = ({ message, style }) => {
+const Toast: React.FC<ToastInterface> = ({
+  message,
+  style = {},
+  testId,
+  index,
+}) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
@@ -32,8 +34,10 @@ const Toast: React.FC<ToastProps> = ({ message, style }) => {
     };
   }, [removeToast, message.id]);
 
+  const testIdToastItem = setTestId({ name: 'toastItem', testId, index });
+
   return (
-    <Container type={message.type} style={style}>
+    <Container type={message.type} style={style} data-testid={testIdToastItem}>
       {icons[message.type]}
 
       <div>
@@ -41,7 +45,11 @@ const Toast: React.FC<ToastProps> = ({ message, style }) => {
         <p>{message.description}</p>
       </div>
 
-      <button onClick={() => removeToast(message.id)} type="button">
+      <button
+        data-testid={`${testIdToastItem}-closeButton`}
+        onClick={() => removeToast(message.id)}
+        type="button"
+      >
         <FiXCircle size={18} />
       </button>
     </Container>
