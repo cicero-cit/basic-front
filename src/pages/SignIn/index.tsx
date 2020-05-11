@@ -1,5 +1,5 @@
 import React, { useCallback, useState, SyntheticEvent } from 'react';
-import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
+import { FiLogIn, FiMail, FiLock, FiGithub } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -73,6 +73,7 @@ const SignIn: React.FC = () => {
     <Container>
       <Content>
         <h1>Preencha seus dados para entrar</h1>
+
         <form onSubmit={handleSubmit}>
           <Input
             testId={pageTestId}
@@ -108,6 +109,10 @@ const SignIn: React.FC = () => {
           <FiLogIn />
           Criar conta
         </Link>
+        <a href="https://github.com/cicero-cit/basic-front">
+          <FiGithub />
+          Source code
+        </a>
       </Content>
     </Container>
   );
