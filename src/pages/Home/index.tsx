@@ -1,41 +1,44 @@
-import React, { useCallback, useRef, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, SyntheticEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiPhone, FiUser } from 'react-icons/fi';
-import { Form } from '@unform/web';
+import { FiArrowLeft, FiUser, FiAnchor } from 'react-icons/fi';
 import * as Yup from 'yup';
-import { FormHandles } from '@unform/core';
+import { useDispatch } from 'react-redux';
 import { Container, Content, ListContainer } from './styles';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import getValidationErrors from '../../utils/getValidationErrors';
 import Avatar from '../../components/Avatar';
-import API from '../../services/api';
 import { useToast } from '../../hooks/toast';
+import { ErrorForm } from '../../utils/DefaultPrivateProps';
+import Contact from '../../models/Contact';
+import ContactAction from '../../actions/Contact';
+import { useTypedSelector } from '../../reducers';
+import { REMOVE_FROM_LIST } from '../../types/Contact';
 
-interface Contact {
-  id: string;
-  name: string;
-  nickname: string;
-}
+const initialContact = new Contact();
 
 const Home: React.FC = () => {
   const pageTestId = 'home';
 
-  const formRef = useRef<FormHandles>(null);
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [contact, setContact] = useState<Contact>({} as Contact);
+  const dispatch = useDispatch();
+  const contacts = useTypedSelector(state => state.Contact.list) || [];
+
+  const [errors, setErrors] = useState({} as ErrorForm);
+
+  const [contact, setContact] = useState<Contact>(initialContact);
+
   const { addToast } = useToast();
 
   const addContact = useCallback(
     async ({ name, nickname }: Omit<Contact, 'id'>) => {
-      const Contact = {
+      const data = {
         name,
         nickname,
+        emoji: Math.floor(Math.random() * 10),
       };
 
-      const response = await API.post('contacts', Contact);
-      setContacts(oldContacts => [...oldContacts, response.data]);
-      formRef.current?.reset();
+      dispatch(await ContactAction.add(data));
+      setContact(initialContact);
 
       addToast({
         type: 'success',
@@ -43,20 +46,20 @@ const Home: React.FC = () => {
         description: 'Contato adicionado com sucesso!',
       });
     },
-    [addToast],
+    [addToast, dispatch],
   );
 
   const updateContact = useCallback(
-    async ({ id, name, nickname }: Contact) => {
-      const Contact = {
+    async ({ id, name, nickname, emoji }: Contact) => {
+      const data = {
         id,
         name,
         nickname,
+        emoji,
       };
 
-      const response = await API.put(`contacts/${Contact.id}`, Contact);
-      setContacts(oldContacts => [...oldContacts, response.data]);
-      formRef.current?.reset();
+      dispatch(await ContactAction.edit(data));
+      setContact(initialContact);
 
       addToast({
         type: 'info',
@@ -64,13 +67,12 @@ const Home: React.FC = () => {
         description: 'Contato foi atualizado',
       });
     },
-    [addToast],
+    [addToast, dispatch],
   );
 
   const deleteContact = useCallback(
     async (id: string) => {
-      await API.delete(`contacts/${id}`);
-      setContacts(oldContacts => oldContacts.filter(item => item.id !== id));
+      dispatch(await ContactAction.delete(id));
 
       addToast({
         type: 'error',
@@ -78,70 +80,90 @@ const Home: React.FC = () => {
         description: 'Contato foi removido da lista',
       });
     },
-    [addToast],
+    [addToast, dispatch],
   );
 
   const clickEditContact = useCallback(
     (id: string) => {
-      setContacts(oldContacts => oldContacts.filter(item => item.id !== id));
+      dispatch({
+        type: REMOVE_FROM_LIST,
+        data: { id },
+      });
       const clickedContact = contacts.find(item => item.id === id);
       setContact(clickedContact as Contact);
-      formRef?.current?.setData(clickedContact as Contact);
     },
-    [contacts],
+    [contacts, dispatch],
   );
 
   const getContacts = useCallback(async () => {
-    const response = await API.get('contacts');
-    setContacts(response.data);
-  }, []);
+    dispatch(await ContactAction.getAll());
+  }, [dispatch]);
 
   useEffect(() => {
     getContacts();
   }, [getContacts]);
 
   const handleSubmit = useCallback(
-    async (data: Omit<Contact, 'id'>) => {
+    async (e: SyntheticEvent) => {
+      e.preventDefault();
       try {
-        formRef.current?.setErrors({});
-
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
           nickname: Yup.string().required('Nickname obrigatório'),
         });
 
-        await schema.validate(data, {
+        await schema.validate(contact, {
           abortEarly: false,
         });
 
         if (contact.id) {
-          await updateContact({ ...data, id: contact.id });
+          await updateContact(contact);
         } else {
-          await addContact(data);
+          await addContact(contact);
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
+          setErrors(getValidationErrors(err));
         }
       }
     },
-    [addContact, updateContact, contact.id],
+    [addContact, updateContact, contact],
   );
+
+  const handleChange = (e: SyntheticEvent): void => {
+    const field = e.target as HTMLTextAreaElement;
+    setContact({ ...contact, [field.name]: field.value });
+  };
 
   return (
     <Container>
       <Content>
         <h3>Quem vai adicionar na sua lista hoje?</h3>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <Input name="name" icon={FiUser} placeholder="Nome" />
-          <Input name="nickname" icon={FiPhone} placeholder="Nickname" />
+
+        <form onSubmit={handleSubmit}>
+          <Input
+            name="name"
+            icon={FiUser}
+            placeholder="Nome"
+            testId={pageTestId}
+            error={errors.name}
+            onChange={handleChange}
+            value={contact.name}
+          />
+          <Input
+            name="nickname"
+            icon={FiAnchor}
+            placeholder="Nickname"
+            testId={pageTestId}
+            error={errors.nickname}
+            onChange={handleChange}
+            value={contact.nickname}
+          />
 
           <Button testId={pageTestId} type="submit" className="success">
             Adicionar
           </Button>
-        </Form>
+        </form>
 
         <Link to="/signin">
           <FiArrowLeft />

@@ -4,6 +4,7 @@ export interface AvatarProps {
   id: string;
   name: string;
   nickname: string;
+  emoji: number;
   editContact(id: string): void;
   deleteContact(id: string): void;
 }

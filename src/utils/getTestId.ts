@@ -1,5 +1,5 @@
 interface TestIdProps {
-  index: number | null;
+  index?: number;
   testId: string;
   name: string;
 }

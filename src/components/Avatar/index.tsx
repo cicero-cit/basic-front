@@ -7,12 +7,13 @@ const Avatar: React.FC<AvatarInterface> = ({
   id,
   name,
   nickname,
+  emoji,
   deleteContact,
   editContact,
 }) => {
   return (
     <Container>
-      {Emoticons[Math.floor(Math.random() * 10)]}
+      {Emoticons[emoji]}
 
       <p>{name}</p>
       <p>{nickname}</p>
