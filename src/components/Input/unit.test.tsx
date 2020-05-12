@@ -25,7 +25,7 @@ describe('<Input />', () => {
       />,
     );
 
-    const input = utils.getByLabelText('name') as HTMLInputElement;
+    const input = utils.getByTestId(`${mockTestId}-input`) as HTMLInputElement;
 
     return {
       input,

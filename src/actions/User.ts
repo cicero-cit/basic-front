@@ -5,7 +5,7 @@ import { USER_SIGNUP, USER_SIGNIN } from '../types/User';
 
 interface Actions {
   signup(user: User): Promise<DefaultAction>;
-  signin(user: Omit<User, 'name'>): Promise<DefaultAction>;
+  signin(user: Omit<User, 'userName'>): Promise<DefaultAction>;
 }
 
 const UserAction = (): Actions => {

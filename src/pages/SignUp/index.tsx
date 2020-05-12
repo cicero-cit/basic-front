@@ -1,4 +1,4 @@
-import React, { useCallback, useState, SyntheticEvent } from 'react';
+import React, { useCallback, useState, SyntheticEvent, useRef } from 'react';
 import { FiMail, FiLock, FiUser, FiArrowLeft } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
@@ -8,11 +8,8 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import getValidationErrors from '../../utils/getValidationErrors';
 import { ErrorForm } from '../../utils/DefaultPrivateProps';
-import User from '../../models/User';
 import { useToast } from '../../hooks/toast';
 import UserAction from '../../actions/User';
-
-const initialUser = new User();
 
 const SignUp: React.FC = () => {
   const pageTestId = 'signup';
@@ -20,7 +17,7 @@ const SignUp: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState(initialUser);
+  const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState({} as ErrorForm);
   const { addToast } = useToast();
 
@@ -29,12 +26,18 @@ const SignUp: React.FC = () => {
       e.preventDefault();
       try {
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
+          userName: Yup.string().required('Nome obrigatório'),
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
           password: Yup.string().min(6, 'Minimo de 6 digitos'),
         });
+
+        const user = {
+          userName: formRef.current.userName.value,
+          email: formRef.current.email.value,
+          password: formRef.current.password.value,
+        };
 
         await schema.validate(user, {
           abortEarly: false,
@@ -53,28 +56,21 @@ const SignUp: React.FC = () => {
         setErrors(getValidationErrors(err));
       }
     },
-    [history, user, addToast, dispatch],
+    [history, addToast, dispatch],
   );
-
-  const handleChange = (e: SyntheticEvent): void => {
-    const field = e.target as HTMLTextAreaElement;
-    setUser({ ...user, [field.name]: field.value });
-  };
 
   return (
     <Container>
       <Content>
         <h1>Realize seu cadastro.</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} ref={formRef}>
           <Input
             testId={pageTestId}
             index={0}
-            name="name"
+            name="userName"
             icon={FiUser}
             placeholder="Nome"
-            error={errors.name}
-            onChange={handleChange}
-            value={user.name}
+            error={errors.userName}
           />
           <Input
             testId={pageTestId}
@@ -83,8 +79,6 @@ const SignUp: React.FC = () => {
             icon={FiMail}
             placeholder="E-mail"
             error={errors.email}
-            onChange={handleChange}
-            value={user.email}
           />
 
           <Input
@@ -94,8 +88,6 @@ const SignUp: React.FC = () => {
             icon={FiLock}
             placeholder="Senha"
             error={errors.password}
-            onChange={handleChange}
-            value={user.password}
             type="password"
           />
           <Button testId={pageTestId} type="submit">
