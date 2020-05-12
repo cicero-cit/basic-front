@@ -1,4 +1,4 @@
-import React, { useCallback, useState, SyntheticEvent } from 'react';
+import React, { useCallback, useState, SyntheticEvent, useRef } from 'react';
 import { FiLogIn, FiMail, FiLock, FiGithub } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -10,9 +10,6 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import { ErrorForm } from '../../utils/DefaultPrivateProps';
 import { useToast } from '../../hooks/toast';
 import UserAction from '../../actions/User';
-import User from '../../models/User';
-
-const InitialUser = new User();
 
 const SignIn: React.FC = () => {
   const pageTestId = 'signin';
@@ -21,7 +18,7 @@ const SignIn: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState(InitialUser);
+  const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState({} as ErrorForm);
 
   const { addToast } = useToast();
@@ -36,6 +33,11 @@ const SignIn: React.FC = () => {
             .email('Digite um e-mail válido'),
           password: Yup.string().required('Senha obrigatorio'),
         });
+
+        const user = {
+          email: formRef.current.email.value,
+          password: formRef.current.password.value,
+        };
 
         await schema.validate(user, {
           abortEarly: false,
@@ -61,20 +63,15 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [history, user, addToast, dispatch],
+    [history, addToast, dispatch],
   );
-
-  const handleChange = (e: SyntheticEvent): void => {
-    const field = e.target as HTMLTextAreaElement;
-    setUser({ ...user, [field.name]: field.value });
-  };
 
   return (
     <Container>
       <Content>
         <h1>Preencha seus dados para entrar</h1>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} ref={formRef}>
           <Input
             testId={pageTestId}
             index={0}
@@ -82,8 +79,6 @@ const SignIn: React.FC = () => {
             icon={FiMail}
             placeholder="E-mail"
             error={errors.email}
-            onChange={handleChange}
-            value={user.email}
           />
 
           <Input
@@ -94,8 +89,6 @@ const SignIn: React.FC = () => {
             placeholder="Senha"
             index={1}
             error={errors.password}
-            onChange={handleChange}
-            value={user.password}
           />
 
           <Button testId={pageTestId} type="submit">

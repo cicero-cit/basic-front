@@ -1,12 +1,12 @@
 class User {
-  name: string;
+  userName: string;
 
   email: string;
 
   password: string;
 
-  constructor(name = '', email = '', password = '') {
-    this.name = name;
+  constructor(userName = '', email = '', password = '') {
+    this.userName = userName;
     this.email = email;
     this.password = password;
   }

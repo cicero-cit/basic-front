@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Container } from './styles';
 import { setTestId } from '../../utils/getTestId';
 import { InputInterface } from './props';
@@ -10,6 +10,7 @@ const Input: React.FC<InputInterface> = ({
   error,
   ...rest
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
 
@@ -19,8 +20,8 @@ const Input: React.FC<InputInterface> = ({
 
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
-    setIsFilled(!!rest.value);
-  }, [rest.value]);
+    setIsFilled(!!inputRef.current.value);
+  }, []);
 
   const getTestIdData = { testId, index: rest.index, name: 'input' };
 
@@ -33,7 +34,7 @@ const Input: React.FC<InputInterface> = ({
         {...rest}
         data-testid={setTestId(getTestIdData)}
         name={name}
-        aria-label={name}
+        ref={inputRef}
       />
 
       {error && <div className="error">{error}</div>}
