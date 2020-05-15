@@ -58,9 +58,5 @@ export const ToastProvider: React.FC = ({ children }) => {
 export function useToast(): ToastContextData {
   const context = useContext(ToastContext);
 
-  if (!context) {
-    throw new Error('Toast deve ser usado com provider bro');
-  }
-
   return context;
 }
